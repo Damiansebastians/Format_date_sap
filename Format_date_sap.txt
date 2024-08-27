@@ -1,0 +1,41 @@
+CLASS zcl_testing_rcp DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
+
+  PUBLIC SECTION.
+
+    METHODS get_convert_date_ds.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
+ENDCLASS.
+
+CLASS zcl_testing_rcp IMPLEMENTATION.
+
+  METHOD get_convert_date_ds.
+
+    DATA: lv_input  TYPE char10,
+          lv_date   TYPE datum,
+          lv_output TYPE char10.
+
+    lv_input = '01.01.2020'. "FORMATO DE ENTRADA DD.MM.AAAA'
+
+    CALL FUNCTION 'CONVERT_DATE_TO_INTERNAL' "FORMATO EXTERNO A FORMATO INTERNO DE SAP PARA FECHAS(DATE)
+      EXPORTING
+        date_external = lv_input " ==> 10.10.2017
+      IMPORTING
+        date_internal = lv_date  " ==> 20171010
+      EXCEPTIONS
+        OTHERS        = 1.
+
+    CALL FUNCTION 'SLS_MISC_CONVERT_TO_DATE' "FORMATO INTERNO DE SAP PARA FECHAS(DATE) A FORMATO EXTERNO
+      EXPORTING
+        p_date        = lv_date
+        p_date_format = 'YYYY-MM-DD' "DEFINIMOS EL FORMATO DE SALIDA
+      IMPORTING
+        p_date_string = lv_output.
+
+  ENDMETHOD.
+
+ENDCLASS.
